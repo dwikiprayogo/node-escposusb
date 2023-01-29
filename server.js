@@ -1,5 +1,4 @@
-// 'use strict';
-// const path = require('path');
+/*package libs yang kita pakai */
 const escpos = require('escpos');
 const express = require('express');
 const http = require('http');
@@ -8,32 +7,33 @@ const { body, validationResult } = require('express-validator');
 const device = new escpos.USB();
 const options = { encoding: "GB18030" }
 const printer = new escpos.Printer(device, options);
-
+/*pengaturan untuk port app*/
 const port = process.env.PORT || 4000;
 const app = express();
 const server = http.createServer(app);
-// const io = socketIO(server);
 
 app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
 
+/*Untuk independent connection*/
 // var bodyParser = require('body-parser')
 // var app = require('express')()
 // var http = require('http').Server(app)
 // var cors = require('cors')
 // app.use(cors())
 // app.use(bodyParser.json())
-
 // const port = 4000;
 
+/* endpoint untuk print */
 app.post('/print', (req, res) => {
   res.json({ status: 'success' })
   console.log(req.body.text);
   // print(req.body.text)
 });
 
+/* endpoint untuk test print */
 app.post('/print-text', [
   body('text').notEmpty(),
 ], async (req, res) => {
@@ -63,26 +63,15 @@ app.post('/print-text', [
           response: "Gagal print"
         });
   }
-  // .then(response => {
-  //   res.status(200).json({
-  //     status: true,
-  //     response: response
-  //   });
-  // }).catch(err => {
-  //   res.status(500).json({
-  //     status: false,
-  //     response: err
-  //   });
-  // });
-
   console.log(status);
-
 });
 
+/*Listening untuk port independen*/
 // http.listen(port, () => {
 //   console.log(`Printer: http://localhost:${port}`);
 // });
 
+/*Pengaturan untuk font print*/
 const print = (text) => {
   let response = false;
   if(device.open){
